@@ -8,12 +8,31 @@
     <FrameLayout
         android:id="@+id/board_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/board_height"/>
+        android:layout_height="wrap_content"/>
 
     <Button
-        android:id="@+id/shuffle_button"
+        android:id="@+id/reset_board"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/lbl_shuffle"/>
+        android:text="@string/lbl_reset"/>
+
+    <Button
+        android:id="@+id/shuffle_board"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_suffle"/>
+
+    <Button
+        android:id="@+id/option3x3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/option3x3"/>
+
+    <Button
+        android:id="@+id/option4x4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/option4x4"/>
+
 
 </LinearLayout>

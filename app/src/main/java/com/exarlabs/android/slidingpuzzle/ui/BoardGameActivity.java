@@ -1,15 +1,20 @@
-package com.exarlabs.android.slidingpuzzle;
+package com.exarlabs.android.slidingpuzzle.ui;
 
+import javax.inject.Inject;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.Toast;
+import android.view.View;
 
-import com.exarlabs.android.slidingpuzzle.fragments.BoardFragment;
+import com.exarlabs.android.slidingpuzzle.R;
+import com.exarlabs.android.slidingpuzzle.SlidingPuzzleApplication;
+import com.exarlabs.android.slidingpuzzle.business.AppConstants;
+import com.exarlabs.android.slidingpuzzle.business.board.GameHandler;
+import com.exarlabs.android.slidingpuzzle.ui.board.BoardFragment;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -21,6 +26,9 @@ public class BoardGameActivity extends AppCompatActivity {
     // ------------------------------------------------------------------------
     // TYPES
     // ------------------------------------------------------------------------
+
+    private static final String TAG = BoardGameActivity.class.getSimpleName();
+
 
     // ------------------------------------------------------------------------
     // STATIC FIELDS
@@ -37,8 +45,11 @@ public class BoardGameActivity extends AppCompatActivity {
     // The board fragment
     private BoardFragment mBoardFragment;
 
-    @Bind(R.id.shuffle_button)
-    public Button mShuffleButton;
+    @Inject
+    public GameHandler mGameHandler;
+    
+    @Inject
+    public SharedPreferences mPreferences;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -57,6 +68,7 @@ public class BoardGameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board_game);
         ButterKnife.bind(this);
+        SlidingPuzzleApplication.component().inject(this);
 
         // Embed the board
         mBoardFragment = new BoardFragment();
@@ -70,10 +82,31 @@ public class BoardGameActivity extends AppCompatActivity {
         return true;
     }
 
-    @OnClick(R.id.shuffle_button)
-    public void shuffleTiles() {
-        Toast.makeText(this, "Clicked!", Toast.LENGTH_SHORT).show();
+    @OnClick(R.id.reset_board)
+    public void resetBoard() {
+        mGameHandler.initializeGame();
     }
+
+    @OnClick(R.id.shuffle_board)
+    public void shuffleBoard() {
+        mGameHandler.shuffle();
+    }
+    
+    @OnClick ({R.id.option3x3, R.id.option4x4})
+    public void optionsChanged(View v) {
+        switch (v.getId()) {
+            case R.id.option3x3:
+                mPreferences.edit().putInt(AppConstants.SP_KEY_BOARD_SIZE, 3).commit();
+                break;
+            case R.id.option4x4:
+                mPreferences.edit().putInt(AppConstants.SP_KEY_BOARD_SIZE, 4).commit();
+                break;
+        }
+
+        resetBoard();
+    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

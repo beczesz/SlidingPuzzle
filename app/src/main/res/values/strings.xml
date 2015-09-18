@@ -7,5 +7,8 @@
 
 
     <!-- Main screen -->
-    <string name="lbl_shuffle">Shuffle!</string>
+    <string name="lbl_reset">Reset!</string>
+    <string name="lbl_suffle">Shuffle!</string>
+    <string name="option3x3">3 X 3</string>
+    <string name="option4x4">4 X 4</string>
 </resources>

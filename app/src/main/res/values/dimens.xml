@@ -3,4 +3,5 @@
 
     <!-- Default board height -->
     <dimen name="board_height">300dip</dimen>
+    <dimen name="tiles_spacing">5dip</dimen>
 </resources>
