@@ -1,9 +1,9 @@
 package com.exarlabs.android.slidingpuzzle.ui.board;
 
+import android.app.Fragment;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +48,7 @@ public class BoardFragment extends Fragment {
     private ViewGroup mRootView;
 
     private BoardView mBoardView;
+
     // ------------------------------------------------------------------------
     // INITIALIZERS
     // ------------------------------------------------------------------------
@@ -83,7 +84,7 @@ public class BoardFragment extends Fragment {
      */
     private void resize(ViewGroup rootView) {
         // calculate the tile dimension in pixels
-        Point screenDimensions = ScreenUtils.getScreenDimensions(getContext());
+        Point screenDimensions = ScreenUtils.getScreenDimensions(getActivity());
         int screenWidth = Math.min(screenDimensions.x, screenDimensions.y);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(screenWidth, screenWidth);
         rootView.setLayoutParams(params);
@@ -96,7 +97,7 @@ public class BoardFragment extends Fragment {
     private void createBoard() {
         mBoardView = new BoardView(getActivity());
         // calculate the tile dimension in pixels
-        Point screenDimensions = ScreenUtils.getScreenDimensions(getContext());
+        Point screenDimensions = ScreenUtils.getScreenDimensions(getActivity());
         int screenWidth = Math.min(screenDimensions.x, screenDimensions.y);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(screenWidth, screenWidth);
         mBoardView.setLayoutParams(params);

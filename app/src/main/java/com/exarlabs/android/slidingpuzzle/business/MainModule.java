@@ -3,6 +3,7 @@ package com.exarlabs.android.slidingpuzzle.business;
 import javax.inject.Singleton;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -24,6 +25,12 @@ public class MainModule {
     @Provides
     @Singleton
     protected Application provideApplication() {
+        return app;
+    }
+
+    @Provides
+    @Singleton
+    protected Context provideApplicationContext() {
         return app;
     }
 

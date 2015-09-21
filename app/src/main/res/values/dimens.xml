@@ -1,5 +1,12 @@
 <resources>
 
+    <!-- Default spacing -->
+    <dimen name="padding_default">10dip</dimen>
+    <dimen name="padding_large">15dip</dimen>
+    <dimen name="padding_xlarge">20dip</dimen>
+    <dimen name="padding_xxlarge">30dip</dimen>
+
+
 
     <!-- Default board height -->
     <dimen name="board_height">300dip</dimen>

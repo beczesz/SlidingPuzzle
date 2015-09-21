@@ -3,4 +3,9 @@
 
     <!-- Board colors -->
     <color name="boardBackground">@android:color/holo_red_light</color>
+
+    <!-- Loaders -->
+    <color name="loader_view_start">@color/primary</color>
+    <color name="loader_view_end">@color/primary_dark</color>
+
 </resources>

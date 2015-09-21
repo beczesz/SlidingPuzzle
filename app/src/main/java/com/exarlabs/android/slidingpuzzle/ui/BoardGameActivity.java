@@ -4,24 +4,21 @@ import javax.inject.Inject;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.exarlabs.android.slidingpuzzle.R;
-import com.exarlabs.android.slidingpuzzle.SlidingPuzzleApplication;
 import com.exarlabs.android.slidingpuzzle.business.AppConstants;
 import com.exarlabs.android.slidingpuzzle.business.board.GameHandler;
 import com.exarlabs.android.slidingpuzzle.ui.board.BoardFragment;
 
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
  * Activity which holds the board and connects with the model and the solver.
  */
-public class BoardGameActivity extends AppCompatActivity {
+public class BoardGameActivity extends ExarActivity {
 
     // ------------------------------------------------------------------------
     // TYPES
@@ -67,12 +64,10 @@ public class BoardGameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board_game);
-        ButterKnife.bind(this);
-        SlidingPuzzleApplication.component().inject(this);
 
         // Embed the board
         mBoardFragment = new BoardFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.board_container, mBoardFragment).commit();
+        getFragmentManager().beginTransaction().add(R.id.board_container, mBoardFragment).commit();
     }
 
     @Override
