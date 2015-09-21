@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import android.content.Context;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -79,6 +80,8 @@ public class BoardView extends RelativeLayout implements BoardPresenter.IBoardVi
         mBoardPresenter.setBoardView(this);
         mBoardPresenter.init();
 
+        setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
+
         // set the current container to be not clickable
         setOnClickListener(new OnClickListener() {
             @Override
@@ -132,20 +135,23 @@ public class BoardView extends RelativeLayout implements BoardPresenter.IBoardVi
             for (int j = 0; j < dimension; j++) {
 
                 int index = mLastBoardState.getTiles()[i][j];
-
-                if (index != BoardState.EMPTY_TILE_INDEX) {
-                    TileView tileView = new TileView(getContext(), mTileSize, index);
-                    mTileViews[i][j] = tileView;
-                    tileView.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View tile) {
-                            if (tile instanceof TileView) {
-                                handleTileClicked((TileView) tile);
-                            }
+                TileView tileView = new TileView(getContext(), mTileSize, index);
+                mTileViews[i][j] = tileView;
+                tileView.setOnTouchListener(new OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View tile, MotionEvent event) {
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                if (tile instanceof TileView) {
+                                    handleTileClicked((TileView) tile);
+                                }
+                                return true;
                         }
-                    });
-                }
+                        return false;
+                    }
+                });
             }
+
         }
 
         refreshTiles();

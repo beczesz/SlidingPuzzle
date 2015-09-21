@@ -30,6 +30,32 @@ public class Move {
             }
         }
 
+        /**
+         * @param currentPosition
+         * @return using this direction a new position is returned after 1 step is made.
+         */
+        public Pair<Integer, Integer> getNextPosition(Pair<Integer, Integer> currentPosition) {
+            int i = currentPosition.first;
+            int j = currentPosition.second;
+
+            switch (this) {
+                case UP:
+                    i--;
+                    break;
+                case DOWN:
+                    i++;
+                    break;
+                case LEFT:
+                    j--;
+                    break;
+                case RIGHT:
+                    j++;
+                    break;
+            }
+
+            return new Pair<>(i, j);
+        }
+
 
     }
 
@@ -88,5 +114,12 @@ public class Move {
 
     public Direction getDirection() {
         return mDirection;
+    }
+
+    /**
+     * @return the new position after the move has been made.
+     */
+    public Pair<Integer, Integer> getNextPosition() {
+        return mDirection.getNextPosition(mPosition);
     }
 }

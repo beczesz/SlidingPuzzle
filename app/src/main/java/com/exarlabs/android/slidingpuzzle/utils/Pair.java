@@ -52,4 +52,9 @@ public class Pair<L, R> {
         Pair pairo = (Pair) o;
         return this.first.equals(pairo.first) && this.second.equals(pairo.second);
     }
+
+    @Override
+    public String toString() {
+        return "<" + first.toString() + "," + second.toString() + ">";
+    }
 }

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import com.exarlabs.android.slidingpuzzle.R;
 import com.exarlabs.android.slidingpuzzle.utils.ui.ScreenUtils;
@@ -88,11 +89,17 @@ public class BoardFragment extends Fragment {
         rootView.setLayoutParams(params);
     }
 
+
     /**
      * Creates and adds a new board
      */
     private void createBoard() {
         mBoardView = new BoardView(getActivity());
+        // calculate the tile dimension in pixels
+        Point screenDimensions = ScreenUtils.getScreenDimensions(getContext());
+        int screenWidth = Math.min(screenDimensions.x, screenDimensions.y);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(screenWidth, screenWidth);
+        mBoardView.setLayoutParams(params);
         mRootView.addView(mBoardView);
     }
 }

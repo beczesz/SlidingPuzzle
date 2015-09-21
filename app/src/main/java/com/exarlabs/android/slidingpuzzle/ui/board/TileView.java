@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.View;
 
+import com.exarlabs.android.slidingpuzzle.model.board.BoardState;
+
 /**
  * Generates a Tile
  * Created by becze on 9/17/2015.
@@ -65,8 +67,10 @@ public class TileView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawRect(0, 0, mHeight, mHeight, mTilePaint);
-        canvas.drawText(Integer.toString(mIndex), mHeight / 2, mHeight / 2, mLabelPaint);
+        if (mIndex != BoardState.EMPTY_TILE_INDEX) {
+            canvas.drawRect(0, 0, mHeight, mHeight, mTilePaint);
+            canvas.drawText(Integer.toString(mIndex), mHeight / 2, mHeight / 2, mLabelPaint);
+        }
     }
 
 
@@ -75,5 +79,10 @@ public class TileView extends View {
     // ------------------------------------------------------------------------
     public int getIndex() {
         return mIndex;
+    }
+
+    @Override
+    public String toString() {
+        return "Index: " + getIndex();
     }
 }

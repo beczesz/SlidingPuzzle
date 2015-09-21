@@ -196,26 +196,8 @@ public class BoardState {
      * @return null if the move cannot be made to that direction, otherwise a valid index
      */
     private Pair<Integer, Integer> getNextPosition(Move move) {
-        Pair<Integer, Integer> initialPosition = move.getPosition();
-        int i = initialPosition.first;
-        int j = initialPosition.second;
-
-        switch (move.getDirection()) {
-            case UP:
-                i--;
-                break;
-            case DOWN:
-                i++;
-                break;
-            case LEFT:
-                j--;
-                break;
-            case RIGHT:
-                j++;
-                break;
-        }
-
-        return getIndex(i, j) != INVALID_TILE_INDEX ? new Pair<>(i, j) : null;
+        Pair<Integer, Integer> nextPosition = move.getNextPosition();
+        return getIndex(nextPosition.first, nextPosition.second) != INVALID_TILE_INDEX ? nextPosition : null;
     }
 
     /**
@@ -262,7 +244,7 @@ public class BoardState {
      * @param j
      * @return
      */
-    private boolean isValidPosition(int i, int j) {
+    public boolean isValidPosition(int i, int j) {
         return (i >= 0 && i < mDimension) && (j >= 0 && j < mDimension);
     }
 

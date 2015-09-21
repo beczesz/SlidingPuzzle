@@ -40,6 +40,7 @@ public class BoardPresenter extends Subscriber<GamEvent> {
 
         /**
          * Swtich the two tiles marked with the position
+         *
          * @param clickedPosition
          * @param emptyTilePosition
          */
@@ -88,7 +89,7 @@ public class BoardPresenter extends Subscriber<GamEvent> {
     @Override
     public void onNext(GamEvent gamEvent) {
         switch (gamEvent.getEventType()) {
-            case GamEvent.GAME_RESET :
+            case GamEvent.GAME_RESET:
                 notifyWithstate();
                 break;
         }
@@ -135,33 +136,50 @@ public class BoardPresenter extends Subscriber<GamEvent> {
         Pair<Integer, Integer> clickedPosition = mGameHandler.getBoardState().getPosition(index);
         Pair<Integer, Integer> emptyTilePosition = mGameHandler.getBoardState().getPosition(BoardState.EMPTY_TILE_INDEX);
 
-        if (!clickedPosition.equals(emptyTilePosition)) {
-            List<Move> moves = generateMoves(clickedPosition, emptyTilePosition);
+        /*
+         * The clicked position must be in the same row or in the same column as the empty tile position
+         */
+        if ((clickedPosition.first == emptyTilePosition.first) || (clickedPosition.second == emptyTilePosition.second)) {
+
+            Move.Direction direction = null;
+            if (clickedPosition.first == emptyTilePosition.first) {
+                // The empty tile in the same row
+                direction = clickedPosition.second > emptyTilePosition.second ? Move.Direction.LEFT : Move.Direction.RIGHT;
+            } else if (clickedPosition.second == emptyTilePosition.second) {
+                direction = clickedPosition.first < emptyTilePosition.first ? Move.Direction.DOWN : Move.Direction.UP;
+            }
+
+
+            /*
+             * Generate the moves usingthe direction and the clicked position.
+             */
+            List<Move> moves = generateMoves(clickedPosition, emptyTilePosition, direction);
 
             for (Move move : moves) {
                 mGameHandler.getBoardState().makeMove(move);
-                mBoardView.switchTiles(clickedPosition, emptyTilePosition);
+                mBoardView.switchTiles(move.getPosition(), move.getNextPosition());
             }
         }
     }
 
 
+    private List<Move> generateMoves(Pair<Integer, Integer> clickedPosition, Pair<Integer, Integer> emptyTilePosition, Move.Direction direction) {
 
-    private List<Move> generateMoves(Pair<Integer, Integer> clickedPosition, Pair<Integer, Integer> emptyTilePosition) {
-
-        List<Move> moves = new ArrayList<>();
-        Move.Direction direction = null;
-
-        // The clicked position must be in the same row or in the same column as the empty tile position
-        if (clickedPosition.first == emptyTilePosition.first) {
-            // The empty tile in the same row
-            direction = clickedPosition.second > emptyTilePosition.second ? Move.Direction.LEFT : Move.Direction.RIGHT;
-        } else if (clickedPosition.second == emptyTilePosition.second) {
-            direction = clickedPosition.first < emptyTilePosition.first ? Move.Direction.DOWN : Move.Direction.UP;
+        if (clickedPosition.equals(emptyTilePosition)) {
+            // If we arrived to the empty tile then just return an emoty list
+            return new ArrayList<>();
+        } else {
+            // Generate a new position
+            Pair<Integer, Integer> nextPosition = direction.getNextPosition(clickedPosition);
+            if (mGameHandler.getBoardState().isValidPosition(nextPosition.first, nextPosition.second)) {
+                List<Move> moves = generateMoves(nextPosition, emptyTilePosition, direction);
+                moves.add(new Move(clickedPosition, direction));
+                return moves;
+            }
         }
 
-        if (direction != null) moves.add(new Move(clickedPosition, direction));
-        return moves;
+        // This should never happen
+        return new ArrayList<>();
     }
 
     /**
