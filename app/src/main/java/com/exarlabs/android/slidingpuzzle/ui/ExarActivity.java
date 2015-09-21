@@ -3,8 +3,6 @@ package com.exarlabs.android.slidingpuzzle.ui;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.exarlabs.android.slidingpuzzle.SlidingPuzzleApplication;
-
 import butterknife.ButterKnife;
 
 /**
@@ -41,7 +39,6 @@ public class ExarActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SlidingPuzzleApplication.component().inject(this);
     }
 
     @Override

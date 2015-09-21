@@ -11,7 +11,7 @@ import dagger.Component;
  * Created by becze on 9/17/2015.
  */
 @Singleton
-@Component(modules = { BoardModule.class, MainModule.class })
+@Component(modules = { BoardModule.class, MainModule.class, PersistenceModule.class })
 public interface DaggerGameComponent extends DaggerComponentGraph {
 
     final class Initializer {
@@ -22,6 +22,7 @@ public interface DaggerGameComponent extends DaggerComponentGraph {
             return DaggerDaggerGameComponent.builder()
                             .boardModule(new BoardModule())
                             .mainModule(new MainModule(app))
+                            .persistenceModule(new PersistenceModule(app))
                             .build();
             //@formatter:on
         }

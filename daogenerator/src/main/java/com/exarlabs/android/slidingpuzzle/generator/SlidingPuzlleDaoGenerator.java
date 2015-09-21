@@ -1,4 +1,4 @@
-package com.exarlabs.android.slidingpuzzle.model;
+package com.exarlabs.android.slidingpuzzle.generator;
 
 import de.greenrobot.daogenerator.DaoGenerator;
 import de.greenrobot.daogenerator.Entity;
@@ -39,18 +39,18 @@ public class SlidingPuzlleDaoGenerator {
     // ------------------------------------------------------------------------
 
     public static void main(String[] args) throws Exception {
-        Schema schema = new Schema(1000, "com.exarlabs.android.slidingpuzzle");
+        Schema schema = new Schema(1000, "com.exarlabs.android.slidingpuzzle.model.dao");
 
         addSolutions(schema);
 
-        new DaoGenerator().generateAll(schema, "../slidingpuzzle/model/dao");
+        new DaoGenerator().generateAll(schema, "./app/src/main/java");
     }
 
     private static void addSolutions(Schema schema) {
-        Entity note = schema.addEntity("Solutions");
+        Entity note = schema.addEntity("GeneratedSolution");
         note.addIdProperty();
         note.addIntProperty("size").notNull();
-        note.addStringProperty("steps").notNull();
+        note.addByteArrayProperty("steps").notNull();
     }
 
     // ------------------------------------------------------------------------

@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.exarlabs.android.slidingpuzzle.business.DaggerComponentGraph;
 import com.exarlabs.android.slidingpuzzle.business.DaggerGameComponent;
+import com.facebook.stetho.Stetho;
 import com.github.mmin18.layoutcast.LayoutCast;
 
 /**
@@ -46,9 +47,12 @@ public class SlidingPuzzleApplication extends Application {
         super.onCreate();
 
 
-        // TODO initialize layout cast only in debug mode
-        // Start the layout cast service
-        LayoutCast.init(this);
+        if (BuildConfig.DEBUG) {
+            // Start the layout cast service
+            LayoutCast.init(this);
+            // Initialize the Layout Cats
+            Stetho.initializeWithDefaults(this);
+        }
 
         sInstance = this;
         buildComponentAndInject();

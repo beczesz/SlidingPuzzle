@@ -10,10 +10,12 @@ public class AppConstants {
      */
     public static final String SP_NAME = "slidingpuzzle";
     public static final String SP_KEY_BOARD_SIZE = "SP_KEY_BOARD_SIZE";
+    public static final String SP_KEY_DATABASE_GENERATED = "SP_KEY_DATABASE_GENERATED";
 
 
     /**
      * General constants
      */
     public static final int DEFAULT_BOARD_SIZE = 4;
+
 }

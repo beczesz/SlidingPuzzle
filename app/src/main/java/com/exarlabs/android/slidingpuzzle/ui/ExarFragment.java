@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.exarlabs.android.slidingpuzzle.SlidingPuzzleApplication;
-
 import butterknife.ButterKnife;
 
 /**
@@ -34,11 +32,6 @@ public class ExarFragment extends Fragment {
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
-
-    public ExarFragment() {
-        SlidingPuzzleApplication.component().inject(this);
-    }
-
 
     // ------------------------------------------------------------------------
     // METHODS

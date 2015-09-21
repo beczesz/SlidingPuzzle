@@ -9,8 +9,10 @@ import android.content.SharedPreferences;
 
 import com.exarlabs.android.slidingpuzzle.SlidingPuzzleApplication;
 import com.exarlabs.android.slidingpuzzle.business.AppConstants;
+import com.exarlabs.android.slidingpuzzle.business.solutions.SolutionsHandler;
 import com.exarlabs.android.slidingpuzzle.model.board.BoardState;
 import com.exarlabs.android.slidingpuzzle.model.board.Move;
+import com.exarlabs.android.slidingpuzzle.utils.Pair;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -39,6 +41,10 @@ public class GameHandler {
     // FIELDS
     // ------------------------------------------------------------------------
 
+
+    // An optimal solution containing the initial state and the list of moves until the solution.
+    private Pair<BoardState, List<Move>> mOptimalSolution;
+
     // Field for storking the current state of the game
     private BoardState mBoardState;
 
@@ -46,6 +52,9 @@ public class GameHandler {
 
     @Inject
     public SharedPreferences mPrefs;
+
+    @Inject
+    public SolutionsHandler mSolutionsHandler;
 
     private PublishSubject<GamEvent> mPublishSubsciber;
 
@@ -93,10 +102,33 @@ public class GameHandler {
         mPublishSubsciber.onNext(new GamEvent(GamEvent.GAME_RESET, mBoardState));
     }
 
+    /**
+     * Shuffles the board taking a random solution.
+     */
     public void shuffle() {
-        int boardSize = mPrefs.getInt(AppConstants.SP_KEY_BOARD_SIZE, AppConstants.DEFAULT_BOARD_SIZE);
-        mBoardState = new BoardState(boardSize);
+        // Get a random solution and initialize the current state with it.
+        mOptimalSolution = getRandomSolution();
+        mBoardState = new BoardState(mOptimalSolution.first.getTiles());
 
+        // Notify all the subscribers that we have changed the model.
+        mPublishSubsciber.onNext(new GamEvent(GamEvent.GAME_RESET, mBoardState));
+    }
+
+    /**
+     * Reads a random solution from the database and parses it to a BoardState and a list of moves as the optimal solution.
+     *
+     * @return
+     */
+    private Pair<BoardState, List<Move>> getRandomSolution() {
+        // get a renadom encoded solution
+        int boardSize = mPrefs.getInt(AppConstants.SP_KEY_BOARD_SIZE, AppConstants.DEFAULT_BOARD_SIZE);
+        byte[] encodedSolution = mSolutionsHandler.getRandomSolution(boardSize);
+        // ecode the solution
+        return decodeSolution(encodedSolution);
+    }
+
+    private Pair<BoardState, List<Move>> decodeSolution(byte[] encodedSolution) {
+        int boardSize = mPrefs.getInt(AppConstants.SP_KEY_BOARD_SIZE, AppConstants.DEFAULT_BOARD_SIZE);
         // TODO temporary hard wired shuffle
         int[][] tiles = mBoardState.getTiles();
         if (boardSize == 3) {
@@ -111,8 +143,7 @@ public class GameHandler {
             tiles[3] = new int[] { 12, 11, 14, 0 };
         }
 
-        // notify the subscribers that the game has been reset
-        mPublishSubsciber.onNext(new GamEvent(GamEvent.GAME_RESET, mBoardState));
+        return new Pair<>(new BoardState(tiles), null);
     }
 
     // ------------------------------------------------------------------------
@@ -125,5 +156,6 @@ public class GameHandler {
     public void setBoardState(BoardState boardState) {
         mBoardState = boardState;
     }
+
 
 }
