@@ -11,6 +11,7 @@ public class AppConstants {
     public static final String SP_NAME = "slidingpuzzle";
     public static final String SP_KEY_BOARD_SIZE = "SP_KEY_BOARD_SIZE";
     public static final String SP_KEY_DATABASE_GENERATED = "SP_KEY_DATABASE_GENERATED";
+    public static final String SP_KEY_DELAYED_SPLASH_SCREEN = "SP_KEY_DELAYED_SPLASH_SCREEN";
 
 
     /**

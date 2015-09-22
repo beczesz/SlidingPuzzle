@@ -68,6 +68,28 @@ public class BoardAndMoveTest extends TestCase {
     }
 
     @Test
+    public void testDirectionAndMove() {
+        // Decode test
+        assertTrue(Move.Direction.decode("00") == Move.Direction.LEFT);
+        assertTrue(Move.Direction.decode("01") == Move.Direction.UP);
+        assertTrue(Move.Direction.decode("10") == Move.Direction.RIGHT);
+        assertTrue(Move.Direction.decode("11") == Move.Direction.DOWN);
+
+        // Reverse test
+        assertTrue(Move.Direction.reverse(Move.Direction.LEFT) == Move.Direction.RIGHT);
+        assertTrue(Move.Direction.reverse(Move.Direction.UP) == Move.Direction.DOWN);
+        assertTrue(Move.Direction.reverse(Move.Direction.RIGHT) == Move.Direction.LEFT);
+        assertTrue(Move.Direction.reverse(Move.Direction.DOWN) == Move.Direction.UP);
+
+        // Move tests
+        Move move = new Move(new Pair<>(1,1), Move.Direction.RIGHT);
+        // test simple move
+        assertTrue(move.getNextPosition().first == 1 && move.getNextPosition().second == 2);
+        assertTrue(move.reverse().getPosition().first == 1 && move.reverse().getPosition().second == 2);
+        assertTrue(move.reverse().getDirection() == Move.Direction.LEFT);
+    }
+
+    @Test
     public void testMoves() {
         BoardState boardState = new BoardState(4);
         Move move = new Move(new Pair<>(3, 2), Move.Direction.RIGHT);

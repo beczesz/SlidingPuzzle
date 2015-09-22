@@ -20,8 +20,8 @@ public interface DaggerGameComponent extends DaggerComponentGraph {
 
             //@formatter:off
             return DaggerDaggerGameComponent.builder()
-                            .boardModule(new BoardModule())
                             .mainModule(new MainModule(app))
+                            .boardModule(new BoardModule())
                             .persistenceModule(new PersistenceModule(app))
                             .build();
             //@formatter:on

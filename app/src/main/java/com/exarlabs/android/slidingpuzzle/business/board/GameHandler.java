@@ -1,6 +1,7 @@
 package com.exarlabs.android.slidingpuzzle.business.board;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,6 +33,9 @@ public class GameHandler {
     // STATIC FIELDS
     // ------------------------------------------------------------------------
 
+    private static final String TAG = GameHandler.class.getSimpleName();
+
+
     // ------------------------------------------------------------------------
     // STATIC METHODS
     // ------------------------------------------------------------------------
@@ -56,6 +60,7 @@ public class GameHandler {
     @Inject
     public SolutionsHandler mSolutionsHandler;
 
+
     private PublishSubject<GamEvent> mPublishSubsciber;
 
 
@@ -64,8 +69,12 @@ public class GameHandler {
     // ------------------------------------------------------------------------
 
     public GameHandler() {
-        // Inject the dependencies
-        SlidingPuzzleApplication.component().inject(this);
+        try {
+            // Inject the dependencies
+            SlidingPuzzleApplication.component().inject(this);
+        } catch  (Exception ex){
+
+        }
 
         // Create an empty list of the user move
         mUserMoves = new ArrayList<>();
@@ -83,11 +92,7 @@ public class GameHandler {
      * @return
      */
     public Subscription subscribe(Subscriber<GamEvent> subscriber) {
-        if (mPublishSubsciber == null) {
-            mPublishSubsciber = PublishSubject.create();
-        }
-
-        return mPublishSubsciber.subscribe(subscriber);
+        return getPublishSubsciber().subscribe(subscriber);
     }
 
 
@@ -99,7 +104,7 @@ public class GameHandler {
         mBoardState = new BoardState(boardSize);
 
         // notify the subscribers that the game has been reset
-        mPublishSubsciber.onNext(new GamEvent(GamEvent.GAME_RESET, mBoardState));
+        getPublishSubsciber().onNext(new GamEvent(GamEvent.GAME_RESET, mBoardState));
     }
 
     /**
@@ -111,8 +116,9 @@ public class GameHandler {
         mBoardState = new BoardState(mOptimalSolution.first.getTiles());
 
         // Notify all the subscribers that we have changed the model.
-        mPublishSubsciber.onNext(new GamEvent(GamEvent.GAME_RESET, mBoardState));
+        getPublishSubsciber().onNext(new GamEvent(GamEvent.GAME_RESET, mBoardState));
     }
+
 
     /**
      * Reads a random solution from the database and parses it to a BoardState and a list of moves as the optimal solution.
@@ -122,39 +128,82 @@ public class GameHandler {
     private Pair<BoardState, List<Move>> getRandomSolution() {
         // get a renadom encoded solution
         int boardSize = mPrefs.getInt(AppConstants.SP_KEY_BOARD_SIZE, AppConstants.DEFAULT_BOARD_SIZE);
+        // TODO make it generic in the future
+        int opimalNrOfSteps = boardSize == 3 ? 25 : 64;
         byte[] encodedSolution = mSolutionsHandler.getRandomSolution(boardSize);
-        // ecode the solution
-        return decodeSolution(encodedSolution);
+        // encode the solution
+        return decodeSolution(encodedSolution, opimalNrOfSteps, boardSize);
     }
 
-    private Pair<BoardState, List<Move>> decodeSolution(byte[] encodedSolution) {
-        int boardSize = mPrefs.getInt(AppConstants.SP_KEY_BOARD_SIZE, AppConstants.DEFAULT_BOARD_SIZE);
-        // TODO temporary hard wired shuffle
-        int[][] tiles = mBoardState.getTiles();
-        if (boardSize == 3) {
-            tiles[0] = new int[] { 6, 4, 8 };
-            tiles[1] = new int[] { 3, 5, 7 };
-            tiles[2] = new int[] { 0, 2, 1 };
+    private Pair<BoardState, List<Move>> decodeSolution(byte[] encodedSolution, int optimalSteps, int boardSize) {
+        /**
+         * Decode each byte separately. Each byte encodes 4 steps.
+         */
 
-        } else {
-            tiles[0] = new int[] { 1, 4, 3, 10 };
-            tiles[1] = new int[] { 7, 2, 13, 9 };
-            tiles[2] = new int[] { 5, 15, 8, 6 };
-            tiles[3] = new int[] { 12, 11, 14, 0 };
+        List<Move> moves = new ArrayList<>();
+
+        // get an empty state with the solution
+        BoardState state = new BoardState(boardSize);
+
+        for (byte fourSteps : encodedSolution) {
+            String binary = String.format("%8s", Integer.toBinaryString(fourSteps & 0xFF)).replace(' ', '0');
+            for (int i = 0; i < 4; i++) {
+                Move.Direction direction = Move.Direction.decode(binary.substring(i * 2, i * 2 + 2));
+                if (direction != null) {
+
+                    // Create a Move and make the reverse of it. We late on playback these moves
+                    Move move = new Move(state.getPosition(BoardState.EMPTY_TILE_INDEX), direction);
+                    Move reverseMove = move.reverse();
+                    // We have to apply the reverse move
+                    state.makeMove(reverseMove);
+                    moves.add(move);
+
+                    // If we arrived to the optimal number of steps already then we just simply stop
+                    if (moves.size() == optimalSteps) {
+                        break;
+                    }
+                }
+            }
         }
 
-        return new Pair<>(new BoardState(tiles), null);
+        Collections.reverse(moves);
+        return new Pair<>(state, moves);
     }
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTTERS
     // ------------------------------------------------------------------------
+
+    /**
+     * @return the publish subsciber.
+     */
+    private PublishSubject<GamEvent> getPublishSubsciber() {
+        if (mPublishSubsciber == null) {
+            mPublishSubsciber = PublishSubject.create();
+        }
+        return mPublishSubsciber;
+    }
+
     public BoardState getBoardState() {
         return mBoardState;
     }
 
     public void setBoardState(BoardState boardState) {
         mBoardState = boardState;
+    }
+
+    /**
+     * @return the optimal solution's BoardState
+     */
+    public BoardState getOptimalSolutionBoardState() {
+        return mOptimalSolution.first;
+    }
+
+    /**
+     * @return optimal solution's steps.
+     */
+    public List<Move> getoptimalSolutionMoves() {
+        return mOptimalSolution.second;
     }
 
 

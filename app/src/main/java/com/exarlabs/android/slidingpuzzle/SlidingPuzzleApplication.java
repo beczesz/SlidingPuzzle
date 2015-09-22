@@ -1,11 +1,17 @@
 package com.exarlabs.android.slidingpuzzle;
 
+import javax.inject.Inject;
+
 import android.app.Application;
+import android.content.SharedPreferences;
 
 import com.exarlabs.android.slidingpuzzle.business.DaggerComponentGraph;
 import com.exarlabs.android.slidingpuzzle.business.DaggerGameComponent;
+import com.exarlabs.android.slidingpuzzle.business.solutions.SolutionsHandler;
 import com.facebook.stetho.Stetho;
 import com.github.mmin18.layoutcast.LayoutCast;
+
+import rx.Observable;
 
 /**
  * The Application object for the game.
@@ -32,7 +38,15 @@ public class SlidingPuzzleApplication extends Application {
     // FIELDS
     // ------------------------------------------------------------------------
     private static DaggerComponentGraph graph;
+
+
     private static SlidingPuzzleApplication sInstance;
+
+    @Inject
+    public SolutionsHandler mSolutionsHandler;
+
+    @Inject
+    public SharedPreferences mPreferences;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
@@ -64,6 +78,14 @@ public class SlidingPuzzleApplication extends Application {
      */
     public static void buildComponentAndInject() {
         graph = DaggerGameComponent.Initializer.init(sInstance);
+        graph.inject(sInstance);
+    }
+
+    /**
+     * @return an observable which emits a true or false if the application is initialized properly
+     */
+    public Observable<Boolean> initializeApplication() {
+        return mSolutionsHandler.generateSolutions();
     }
 
     /**

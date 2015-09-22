@@ -1,7 +1,10 @@
 package com.exarlabs.android.slidingpuzzle.ui.splash;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 
+import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,8 +18,9 @@ import com.exarlabs.android.slidingpuzzle.ui.ExarActivity;
 import com.greenfrvr.rubberloader.RubberLoaderView;
 
 import butterknife.Bind;
-import butterknife.OnClick;
+import rx.Observable;
 import rx.Observer;
+import rx.functions.Func2;
 
 /**
  * Created by becze on 9/21/2015.
@@ -30,6 +34,9 @@ public class SplashScreenActivity extends ExarActivity {
     // ------------------------------------------------------------------------
     // STATIC FIELDS
     // ------------------------------------------------------------------------
+
+    // delay of seconds
+    private static final int SPLASH_DELAY_SECONDS = 3;
 
     // ------------------------------------------------------------------------
     // STATIC METHODS
@@ -48,6 +55,9 @@ public class SplashScreenActivity extends ExarActivity {
     @Inject
     public SharedPreferences mPrefs;
 
+    @Inject
+    public Application mApplication;
+
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -63,15 +73,30 @@ public class SplashScreenActivity extends ExarActivity {
         setContentView(R.layout.splay_screen_layout);
         SlidingPuzzleApplication.component().inject(this);
 
-
         // Initialzie the databse
-        initializeDatabase();
+        initializeApplication();
     }
 
-    private void initializeDatabase() {
-        if (!mSolutionsHandler.isDatabaseGenerated()) {
-            mLoaderView.startLoading();
-            mSolutionsHandler.generateSolutions(new Observer<Boolean>() {
+
+    /**
+     * Initialize the application and wait for the result. We might introduce an artificial delay
+     * to be able to show the logo a bit to the user, and to not to have a blinking view on the high end devices.
+     */
+    private void initializeApplication() {
+        // start the loader view
+        mLoaderView.startLoading();
+
+        if (mApplication instanceof SlidingPuzzleApplication) {
+            //@formatter:off
+            ((SlidingPuzzleApplication) mApplication).initializeApplication().
+                zipWith(getSplashScreenDelayer(),
+                            new Func2<Boolean, Boolean, Boolean>() {
+                                @Override
+                                public Boolean call(Boolean first, Boolean second) {
+                                    return first && second;
+                                }
+                            })
+            .subscribe(new Observer<Boolean>() {
                 @Override
                 public void onCompleted() {
 
@@ -83,22 +108,27 @@ public class SplashScreenActivity extends ExarActivity {
                 }
 
                 @Override
-                public void onNext(Boolean solutionsAreGenerated) {
-                    if (solutionsAreGenerated) {
-                        mPrefs.edit().putBoolean(AppConstants.SP_KEY_DATABASE_GENERATED, true).commit();
+                public void onNext(Boolean initSuccessful) {
+                    if (initSuccessful) {
                         onInitFinished();
                     }
                 }
             });
-        } else {
-            mLoaderView.startLoading();
+            //@formatter:on
         }
     }
+
+    private Observable<Boolean> getSplashScreenDelayer() {
+        //@formatter:off
+        return Observable.just(true)
+                        .delay(mPrefs.getBoolean(AppConstants.SP_KEY_DELAYED_SPLASH_SCREEN, true) ? SPLASH_DELAY_SECONDS : 0, TimeUnit.SECONDS);
+        //@formatter:on
+    }
+
 
     /**
      * Shoudl be called when all the nexessary initialization is done.
      */
-    @OnClick(R.id.loader)
     public void onInitFinished() {
         startActivity(new Intent(this, BoardGameActivity.class));
     }

@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.exarlabs.android.slidingpuzzle.R;
+import com.exarlabs.android.slidingpuzzle.SlidingPuzzleApplication;
 import com.exarlabs.android.slidingpuzzle.business.AppConstants;
 import com.exarlabs.android.slidingpuzzle.business.board.GameHandler;
 import com.exarlabs.android.slidingpuzzle.ui.board.BoardFragment;
@@ -44,13 +45,17 @@ public class BoardGameActivity extends ExarActivity {
 
     @Inject
     public GameHandler mGameHandler;
-    
+
     @Inject
     public SharedPreferences mPreferences;
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
+
+    public BoardGameActivity() {
+        SlidingPuzzleApplication.component().inject(this);
+    }
 
     // ------------------------------------------------------------------------
     // METHODS
@@ -86,8 +91,8 @@ public class BoardGameActivity extends ExarActivity {
     public void shuffleBoard() {
         mGameHandler.shuffle();
     }
-    
-    @OnClick ({R.id.option3x3, R.id.option4x4})
+
+    @OnClick({ R.id.option3x3, R.id.option4x4 })
     public void optionsChanged(View v) {
         switch (v.getId()) {
             case R.id.option3x3:
@@ -100,7 +105,6 @@ public class BoardGameActivity extends ExarActivity {
 
         resetBoard();
     }
-
 
 
     @Override

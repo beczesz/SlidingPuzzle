@@ -1,5 +1,6 @@
 package com.exarlabs.android.slidingpuzzle.business;
 
+import com.exarlabs.android.slidingpuzzle.SlidingPuzzleApplication;
 import com.exarlabs.android.slidingpuzzle.business.board.GameHandler;
 import com.exarlabs.android.slidingpuzzle.business.solutions.SolutionsHandler;
 import com.exarlabs.android.slidingpuzzle.ui.BoardGameActivity;
@@ -22,4 +23,6 @@ public interface DaggerComponentGraph {
     void inject(SplashScreenActivity splashScreenActivity);
 
     void inject(SolutionsHandler solutionsHandler);
+    void inject(SlidingPuzzleApplication instance);
+
 }

@@ -166,7 +166,7 @@ public class BoardState {
      */
     public boolean makeMove(Move move) {
         if (isValid(move)) {
-            swapIndices(move.getPosition(), getNextPosition(move));
+            return swapIndices(move.getPosition(), getNextPosition(move));
         }
 
         return false;

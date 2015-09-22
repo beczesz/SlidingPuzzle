@@ -3,6 +3,7 @@ package com.exarlabs.android.slidingpuzzle.business.solutions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -18,7 +19,6 @@ import com.exarlabs.android.slidingpuzzle.model.dao.GeneratedSolution;
 import com.exarlabs.android.slidingpuzzle.model.dao.GeneratedSolutionDao;
 
 import rx.Observable;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -70,7 +70,6 @@ public class SolutionsHandler {
         SlidingPuzzleApplication.component().inject(this);
 
         mSolutionsDao = mDaoSession.getGeneratedSolutionDao();
-
     }
 
 
@@ -84,32 +83,45 @@ public class SolutionsHandler {
 
     /**
      * Generates the solutions in a background thread and notifies the subscriber if it is done.
-     *
-     * @param subscriber
      */
-    public void generateSolutions(Observer<Boolean> subscriber) {
+    public Observable<Boolean> generateSolutions() {
         //@formatter:off
-        getGenerator()
+        return getGenerator()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(subscriber);
+            .map(new Func1<Boolean, Boolean>() {
+                @Override
+                public Boolean call(Boolean result) {
+                    mPrefs.edit().putBoolean(AppConstants.SP_KEY_DATABASE_GENERATED, result).commit();
+                    return result;
+                }
+            });
         //@formatter:on
     }
 
     @NonNull
     private Observable<Boolean> getGenerator() {
-        return Observable.just(true).map(new Func1<Boolean, Boolean>() {
-            @Override
-            public Boolean call(Boolean aBoolean) {
-                return generateSolutions();
-            }
-        });
+        Observable<Boolean> observable = Observable.just(isDatabaseGenerated());
+
+        if (!isDatabaseGenerated()) {
+            observable = Observable.just(isDatabaseGenerated()).map(new Func1<Boolean, Boolean>() {
+                @Override
+                public Boolean call(Boolean aBoolean) {
+                    return generateAllBoardSizeSolutions();
+                }
+            });
+        }
+
+        // Generate only if it is not generated
+        return observable;
+
     }
 
     /**
      * Reads the encoded solutions from the assets and stores into database.
      */
-    private boolean generateSolutions() {
+    private boolean generateAllBoardSizeSolutions() {
+        mSolutionsDao.deleteAll();
         return generate3x3() && generate4x4();
     }
 
@@ -124,7 +136,7 @@ public class SolutionsHandler {
             while ((inputStream.read(buffer)) != -1) {
                 GeneratedSolution solution = new GeneratedSolution();
                 solution.setSize(4);
-                solution.setSteps(buffer);
+                solution.setSteps(Arrays.copyOf(buffer, buffer.length));
                 solutions.add(solution);
             }
 
@@ -144,14 +156,14 @@ public class SolutionsHandler {
         try {
             InputStream inputStream = mContext.getAssets().open(ASSET_NAME_SOLUTIONS_3X3);
 
-            // for 3x3 with 25 steps we can encode it into 7 bytes, so our buffer will be 7
             byte[] buffer = new byte[7];
+            // for 3x3 with 25 steps we can encode it into 7 bytes, so our buffer will be 7
             List<GeneratedSolution> solutions = new ArrayList<>();
 
             while ((inputStream.read(buffer)) != -1) {
                 GeneratedSolution solution = new GeneratedSolution();
                 solution.setSize(3);
-                solution.setSteps(buffer);
+                solution.setSteps(Arrays.copyOf(buffer, buffer.length));
                 solutions.add(solution);
             }
 
@@ -168,8 +180,22 @@ public class SolutionsHandler {
         return false;
     }
 
+    /**
+     * Returns a random solution from the databased with the given board size in an encoded form.
+     *
+     * @param boardSize the board size
+     * @return an encoded solution in byte[]
+     */
     public byte[] getRandomSolution(int boardSize) {
-        return null;
+        //@formatter:off
+        List<GeneratedSolution> list = mSolutionsDao.queryBuilder()
+                        .where(GeneratedSolutionDao.Properties.Size.eq(boardSize))
+                        .orderRaw("RANDOM()")
+                        .limit(1)
+                        .build()
+                        .list();
+        //@formatter:on
+        return list.get(0).getSteps();
     }
 
     // ------------------------------------------------------------------------
