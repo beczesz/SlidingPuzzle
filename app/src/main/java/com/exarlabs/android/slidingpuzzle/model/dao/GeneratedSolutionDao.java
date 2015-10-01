@@ -25,7 +25,7 @@ public class GeneratedSolutionDao extends AbstractDao<GeneratedSolution, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Size = new Property(1, int.class, "size", false, "SIZE");
-        public final static Property Steps = new Property(2, byte[].class, "steps", false, "STEPS");
+        public final static Property Moves = new Property(2, byte[].class, "moves", false, "MOVES");
     };
 
 
@@ -43,7 +43,7 @@ public class GeneratedSolutionDao extends AbstractDao<GeneratedSolution, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"GENERATED_SOLUTION\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"SIZE\" INTEGER NOT NULL ," + // 1: size
-                "\"STEPS\" BLOB NOT NULL );"); // 2: steps
+                "\"MOVES\" BLOB NOT NULL );"); // 2: moves
     }
 
     /** Drops the underlying database table. */
@@ -62,7 +62,7 @@ public class GeneratedSolutionDao extends AbstractDao<GeneratedSolution, Long> {
             stmt.bindLong(1, id);
         }
         stmt.bindLong(2, entity.getSize());
-        stmt.bindBlob(3, entity.getSteps());
+        stmt.bindBlob(3, entity.getMoves());
     }
 
     /** @inheritdoc */
@@ -77,7 +77,7 @@ public class GeneratedSolutionDao extends AbstractDao<GeneratedSolution, Long> {
         GeneratedSolution entity = new GeneratedSolution( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getInt(offset + 1), // size
-            cursor.getBlob(offset + 2) // steps
+            cursor.getBlob(offset + 2) // moves
         );
         return entity;
     }
@@ -87,7 +87,7 @@ public class GeneratedSolutionDao extends AbstractDao<GeneratedSolution, Long> {
     public void readEntity(Cursor cursor, GeneratedSolution entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setSize(cursor.getInt(offset + 1));
-        entity.setSteps(cursor.getBlob(offset + 2));
+        entity.setMoves(cursor.getBlob(offset + 2));
      }
     
     /** @inheritdoc */

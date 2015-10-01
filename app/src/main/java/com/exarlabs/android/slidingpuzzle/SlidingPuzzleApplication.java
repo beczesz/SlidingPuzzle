@@ -8,8 +8,12 @@ import android.content.SharedPreferences;
 import com.exarlabs.android.slidingpuzzle.business.DaggerComponentGraph;
 import com.exarlabs.android.slidingpuzzle.business.DaggerGameComponent;
 import com.exarlabs.android.slidingpuzzle.business.solutions.SolutionsHandler;
+import com.exarlabs.android.slidingpuzzle.utils.FontUtil;
 import com.facebook.stetho.Stetho;
 import com.github.mmin18.layoutcast.LayoutCast;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.IoniconsModule;
+import com.tsengvn.typekit.Typekit;
 
 import rx.Observable;
 
@@ -40,8 +44,6 @@ public class SlidingPuzzleApplication extends Application {
     private static DaggerComponentGraph graph;
 
 
-    private static SlidingPuzzleApplication sInstance;
-
     @Inject
     public SolutionsHandler mSolutionsHandler;
 
@@ -60,7 +62,17 @@ public class SlidingPuzzleApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        // Build the dagger components
+        buildComponentAndInject(this);
 
+        // Initialize all the rest of the libs
+        initializeLibs();
+    }
+
+    /**
+     * Initializes utility libs
+     */
+    private void initializeLibs() {
         if (BuildConfig.DEBUG) {
             // Start the layout cast service
             LayoutCast.init(this);
@@ -68,17 +80,23 @@ public class SlidingPuzzleApplication extends Application {
             Stetho.initializeWithDefaults(this);
         }
 
-        sInstance = this;
-        buildComponentAndInject();
+        //@formatter:off
+        Typekit.getInstance()
+                        .addNormal(FontUtil.getInstance().getNormal())
+                        .addBold(FontUtil.getInstance().getBold());
+
+        //@formatter:on
+
+        Iconify.with(new IoniconsModule());
     }
 
 
     /**
      * Rebuilds the dagger generated object graph
      */
-    public static void buildComponentAndInject() {
-        graph = DaggerGameComponent.Initializer.init(sInstance);
-        graph.inject(sInstance);
+    public static void buildComponentAndInject(SlidingPuzzleApplication app) {
+        graph = DaggerGameComponent.Initializer.init(app);
+        graph.inject(app);
     }
 
     /**

@@ -1,22 +1,30 @@
 package com.exarlabs.android.slidingpuzzle.business.board;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import android.content.SharedPreferences;
+import android.os.SystemClock;
 
 import com.exarlabs.android.slidingpuzzle.SlidingPuzzleApplication;
 import com.exarlabs.android.slidingpuzzle.business.AppConstants;
+import com.exarlabs.android.slidingpuzzle.business.score.ScoreHandler;
 import com.exarlabs.android.slidingpuzzle.business.solutions.SolutionsHandler;
 import com.exarlabs.android.slidingpuzzle.model.board.BoardState;
 import com.exarlabs.android.slidingpuzzle.model.board.Move;
+import com.exarlabs.android.slidingpuzzle.model.dao.Play;
 import com.exarlabs.android.slidingpuzzle.utils.Pair;
 
+import rx.Observable;
+import rx.Observer;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 /**
@@ -54,27 +62,31 @@ public class GameHandler {
 
     private List<Move> mUserMoves;
 
+    /**
+     * Represents a play record in the database
+     */
+    private Play mCurrentPlay;
+    private long mCurrentPlayStart;
+
     @Inject
     public SharedPreferences mPrefs;
 
     @Inject
     public SolutionsHandler mSolutionsHandler;
 
+    @Inject
+    public ScoreHandler mScoreHandler;
+
 
     private PublishSubject<GamEvent> mPublishSubsciber;
-
 
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
 
     public GameHandler() {
-        try {
-            // Inject the dependencies
-            SlidingPuzzleApplication.component().inject(this);
-        } catch  (Exception ex){
-
-        }
+        // Inject the dependencies
+        SlidingPuzzleApplication.component().inject(this);
 
         // Create an empty list of the user move
         mUserMoves = new ArrayList<>();
@@ -92,7 +104,12 @@ public class GameHandler {
      * @return
      */
     public Subscription subscribe(Subscriber<GamEvent> subscriber) {
-        return getPublishSubsciber().subscribe(subscriber);
+        //@formatter:off
+        return getPublishSubsciber()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(subscriber);
+        //@formatter:on
     }
 
 
@@ -103,9 +120,42 @@ public class GameHandler {
         int boardSize = mPrefs.getInt(AppConstants.SP_KEY_BOARD_SIZE, AppConstants.DEFAULT_BOARD_SIZE);
         mBoardState = new BoardState(boardSize);
 
+        // reset the rest of the fields
+        mOptimalSolution = null;
+        mUserMoves.clear();
+        mCurrentPlay = null;
+        mCurrentPlayStart = 0;
+
+
         // notify the subscribers that the game has been reset
-        getPublishSubsciber().onNext(new GamEvent(GamEvent.GAME_RESET, mBoardState));
+        notifySubscribers(new GamEvent(GamEvent.GAME_RESET, mBoardState));
     }
+
+    /**
+     * Starts a new game by shuffling the board
+     */
+    public void startNewGame() {
+        mUserMoves.clear();
+        mCurrentPlay = new Play();
+        mCurrentPlay.setStartDate(new Date());
+        mCurrentPlayStart = SystemClock.elapsedRealtime();
+
+        shuffle();
+    }
+
+    /**
+     * Finish the game.
+     *
+     * @param move
+     */
+    private void finishGame(Move move) {
+        // Save the current game
+        saveCurrentPlay();
+
+        // Notify all the subscribers that the game is solved
+        notifySubscribers(new GamEvent(GamEvent.GAME_SOLVED, move));
+    }
+
 
     /**
      * Shuffles the board taking a random solution.
@@ -114,11 +164,60 @@ public class GameHandler {
         // Get a random solution and initialize the current state with it.
         mOptimalSolution = getRandomSolution();
         mBoardState = new BoardState(mOptimalSolution.first.getTiles());
+        mUserMoves.clear();
 
         // Notify all the subscribers that we have changed the model.
-        getPublishSubsciber().onNext(new GamEvent(GamEvent.GAME_RESET, mBoardState));
+        notifySubscribers(new GamEvent(GamEvent.GAME_SHUFFLED, mBoardState));
     }
 
+    /**
+     * Make the user move
+     *
+     * @param move
+     */
+    public void makeMove(Move move) {
+        mBoardState.makeMove(move);
+        addUserMove(move);
+        notifySubscribers(new GamEvent(GamEvent.MOVE_MADE, move));
+
+
+        // check if the board is solved and if yes then stop the game and save the play
+        if (mBoardState.isSolved()) {
+            finishGame(move);
+        }
+    }
+
+    /**
+     * Notify all the subscribers that we have changed the model.
+     *
+     * @param event
+     */
+    private void notifySubscribers(GamEvent event) {
+        getPublishSubsciber().onNext(event);
+    }
+
+    /**
+     * Saves the current game into the database.
+     */
+    private void saveCurrentPlay() {
+        if (mCurrentPlay != null) {
+            mCurrentPlay.setDuration(getGameDuration());
+            mCurrentPlay.setNumberOfMoves(mUserMoves.size());
+            mCurrentPlay.setEncodedMoves(GameUtil.encodeMoves(mUserMoves));
+            mCurrentPlay.setBoardSize(mBoardState.getDimension());
+
+            // save the current play
+            mScoreHandler.savePlay(mCurrentPlay);
+            mCurrentPlay = null;
+        }
+    }
+
+    /**
+     * @return the number of milliseconds since the game start.
+     */
+    public int getGameDuration() {
+        return (int) (SystemClock.elapsedRealtime() - mCurrentPlayStart);
+    }
 
     /**
      * Reads a random solution from the database and parses it to a BoardState and a list of moves as the optimal solution.
@@ -132,42 +231,68 @@ public class GameHandler {
         int opimalNrOfSteps = boardSize == 3 ? 25 : 64;
         byte[] encodedSolution = mSolutionsHandler.getRandomSolution(boardSize);
         // encode the solution
-        return decodeSolution(encodedSolution, opimalNrOfSteps, boardSize);
+        return GameUtil.decodeSolution(encodedSolution, opimalNrOfSteps, boardSize);
     }
 
-    private Pair<BoardState, List<Move>> decodeSolution(byte[] encodedSolution, int optimalSteps, int boardSize) {
-        /**
-         * Decode each byte separately. Each byte encodes 4 steps.
-         */
+    /**
+     * If there is a random solution generated then sets the current state to the generated state.
+     * It there is no random solution generated then we just simply generate one.
+     * Then it makes a move with the given time interval until it solves the game.
+     */
+    public void replayOptimalSolution(int playRate) {
+        if (mOptimalSolution == null) {
+            shuffle();
+        } else {
 
-        List<Move> moves = new ArrayList<>();
+            // Board state
+            mBoardState = new BoardState(mOptimalSolution.first.getTiles());
 
-        // get an empty state with the solution
-        BoardState state = new BoardState(boardSize);
-
-        for (byte fourSteps : encodedSolution) {
-            String binary = String.format("%8s", Integer.toBinaryString(fourSteps & 0xFF)).replace(' ', '0');
-            for (int i = 0; i < 4; i++) {
-                Move.Direction direction = Move.Direction.decode(binary.substring(i * 2, i * 2 + 2));
-                if (direction != null) {
-
-                    // Create a Move and make the reverse of it. We late on playback these moves
-                    Move move = new Move(state.getPosition(BoardState.EMPTY_TILE_INDEX), direction);
-                    Move reverseMove = move.reverse();
-                    // We have to apply the reverse move
-                    state.makeMove(reverseMove);
-                    moves.add(move);
-
-                    // If we arrived to the optimal number of steps already then we just simply stop
-                    if (moves.size() == optimalSteps) {
-                        break;
-                    }
-                }
-            }
+            // Notify all the subscribers that we have changed the model.
+            getPublishSubsciber().onNext(new GamEvent(GamEvent.GAME_SHUFFLED, mBoardState));
         }
 
-        Collections.reverse(moves);
-        return new Pair<>(state, moves);
+        //@formatter:off
+        // We just create an Observable which with the given rate it plays the game.
+        Observable.interval(playRate, TimeUnit.MILLISECONDS)
+                        .take(mOptimalSolution.second.size())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<Long>() {
+
+            int index = 0;
+
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Long aLong) {
+                makeMove(mOptimalSolution.second.get(index++));
+            }
+        });
+        //@formatter:on
+
+
+    }
+
+    /**
+     * Saves a user move
+     *
+     * @param object
+     * @return
+     */
+    public boolean addUserMove(Move object) {
+        return mUserMoves.add(object);
+    }
+
+    public int getNumberOfUserMoves() {
+        return mUserMoves != null ? mUserMoves.size() : 0;
     }
 
     // ------------------------------------------------------------------------
@@ -175,7 +300,7 @@ public class GameHandler {
     // ------------------------------------------------------------------------
 
     /**
-     * @return the publish subsciber.
+     * @return publish subsciber instance which will help us to implement an event bus.
      */
     private PublishSubject<GamEvent> getPublishSubsciber() {
         if (mPublishSubsciber == null) {

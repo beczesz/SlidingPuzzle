@@ -7,8 +7,7 @@ import java.io.UnsupportedEncodingException;
 
 import org.junit.Test;
 
-import android.support.annotation.NonNull;
-
+import com.exarlabs.android.slidingpuzzle.business.board.GameUtil;
 import com.exarlabs.android.slidingpuzzle.model.board.BoardState;
 import com.exarlabs.android.slidingpuzzle.utils.generator.SlidingPuzzleSolutionsGenerator;
 
@@ -68,8 +67,8 @@ public class GenerateSolution {
             System.out.println(generator.getInitialState().toString());
 
             for (BoardState state : generator.getSolutions().keySet()) {
-                byte[] compressed = compress(generator.getSolutions().get(state));
-                String paddedBinary = toPaddedBinary(generator.getSolutions().get(state));
+                byte[] compressed = GameUtil.compress(generator.getSolutions().get(state));
+                String paddedBinary = GameUtil.toPaddedBinary(generator.getSolutions().get(state));
 
                 if (DISPLAY_RESULTS) {
                     System.out.println(generator.getSolutions().get(state) + " b: " + paddedBinary);
@@ -92,8 +91,8 @@ public class GenerateSolution {
     @Test
     public void testTemprandomGenerateSolutions() {
 
-        // Temprarily we genaret one random solution NR_OF_SOLUTIONS time. This is very inefficient and bad. The next generation generator will do
-        // it better.
+        // Temprarily we genaret one random solution NR_OF_SOLUTIONS time. This is very inefficient and bad.
+        // The next generation generator will do it better.
 
         try {
             FileOutputStream writer = new FileOutputStream(String.format(FILE_NAME, DIMENSION, DIMENSION, DEPTH));
@@ -104,8 +103,8 @@ public class GenerateSolution {
 
 
                 for (BoardState state : generator.getSolutions().keySet()) {
-                    byte[] compressed = compress(generator.getSolutions().get(state));
-                    String paddedBinary = toPaddedBinary(generator.getSolutions().get(state));
+                    byte[] compressed = GameUtil.compress(generator.getSolutions().get(state));
+                    String paddedBinary = GameUtil.toPaddedBinary(generator.getSolutions().get(state));
 
                     if (DISPLAY_RESULTS) {
                         System.out.println(generator.getSolutions().get(state) + " b: " + paddedBinary);
@@ -124,54 +123,6 @@ public class GenerateSolution {
             e.printStackTrace();
         }
 
-    }
-
-    private byte[] compress(String s) {
-        String binary = toPaddedBinary(s);
-        byte[] finalByteArra = new byte[binary.length() / 8];
-        char[] charArray = new char[binary.length() / 8];
-
-        for (int i = 0; i < binary.length() / 8; i++) {
-            byte conertedByte = (byte) Integer.parseInt(binary.substring(i * 8, i * 8 + 8), 2);
-            char test = (char) Integer.parseInt(binary.substring(i * 8, i * 8 + 8), 2);
-            finalByteArra[i] = conertedByte;
-            charArray[i] = test;
-        }
-
-
-        return finalByteArra;
-    }
-
-    @NonNull
-    private String toPaddedBinary(String s) {
-        if (s.length() % 4 != 0) {
-            // pad with the missing values
-            for (int i = 0; i < s.length() % 4; i++) {
-                s += "3";
-            }
-        }
-
-        StringBuilder builder = new StringBuilder();
-
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            switch (c) {
-                case '0':
-                    builder.append("00");
-                    break;
-                case '1':
-                    builder.append("01");
-                    break;
-                case '2':
-                    builder.append("10");
-                    break;
-                case '3':
-                    builder.append("11");
-                    break;
-            }
-
-        }
-        return builder.toString();
     }
 
 

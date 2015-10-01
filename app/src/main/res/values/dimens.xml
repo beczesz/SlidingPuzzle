@@ -1,14 +1,33 @@
 <resources>
 
+    <!-- Default Text Size -->
+    <dimen name="text_size_micro">12sp</dimen>
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_large">22sp</dimen>
+    <dimen name="text_size_xlarge">26sp</dimen>
+
+
     <!-- Default spacing -->
     <dimen name="padding_default">10dip</dimen>
     <dimen name="padding_large">15dip</dimen>
     <dimen name="padding_xlarge">20dip</dimen>
     <dimen name="padding_xxlarge">30dip</dimen>
+    <dimen name="padding_xxxlarge">50dip</dimen>
 
 
 
     <!-- Default board height -->
     <dimen name="board_height">300dip</dimen>
-    <dimen name="tiles_spacing">5dip</dimen>
+    <dimen name="tiles_spacing">3dip</dimen>
+    <dimen name="tiles_label_size">25sp</dimen>
+    <dimen name="tiles_rounding">5dip</dimen>
+    <dimen name="board_padding">@dimen/padding_default</dimen>
+    <dimen name="stats_icon_size">32dip</dimen>
+
+
+    <!-- Main Menu -->
+    <dimen name="main_menu_font_size">@dimen/text_size_large</dimen>
+    <dimen name="main_menu_item_height">65dip</dimen>
+
 </resources>

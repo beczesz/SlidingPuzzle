@@ -67,6 +67,9 @@ dependencies {
 
     // UI
     compile 'com.github.greenfrvr:rubber-loader:1.0.0@aar'
+    compile 'com.tsengvn:Typekit:1.0.0'
+    compile 'com.joanzapata.iconify:android-iconify-ionicons:2.1.0'
+
 
     // Debug/Development tools
     compile 'com.github.mmin18.layoutcast:library:1.+@aar'

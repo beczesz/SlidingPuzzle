@@ -27,9 +27,10 @@
         </activity>
 
         <activity
-            android:name=".ui.BoardGameActivity"
-            android:screenOrientation="portrait"
-            />
+            android:name=".ui.SlidingPuzzleActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
 
 
         <!-- Special activity required by the Layoutcast -->

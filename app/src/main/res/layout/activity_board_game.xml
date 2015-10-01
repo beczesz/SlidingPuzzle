@@ -5,34 +5,12 @@
               android:orientation="vertical"
               tools:context=".BoardGameActivity">
 
-    <FrameLayout
-        android:id="@+id/board_container"
+
+    <fragment
+        android:id="@+id/game_container"
+        class="com.exarlabs.android.slidingpuzzle.ui.game.BoardGameFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/reset_board"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/lbl_reset"/>
-
-    <Button
-        android:id="@+id/shuffle_board"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/lbl_suffle"/>
-
-    <Button
-        android:id="@+id/option3x3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/option3x3"/>
-
-    <Button
-        android:id="@+id/option4x4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/option4x4"/>
-
+        tools:layout="@layout/game_layout"/>
 
 </LinearLayout>

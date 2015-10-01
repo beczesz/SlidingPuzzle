@@ -1,4 +1,4 @@
-package com.exarlabs.android.slidingpuzzle.ui.board;
+package com.exarlabs.android.slidingpuzzle.ui.game.board;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,10 +90,17 @@ public class BoardPresenter extends Subscriber<GamEvent> {
     public void onNext(GamEvent gamEvent) {
         switch (gamEvent.getEventType()) {
             case GamEvent.GAME_RESET:
-                notifyWithstate();
+            case GamEvent.GAME_SHUFFLED:
+                notifyWithState();
+                break;
+
+            case GamEvent.MOVE_MADE:
+                Move move = (Move) gamEvent.getEventObject();
+                updateViewWithMove(move);
                 break;
         }
     }
+
 
     /**
      * Sets the view for this presenter.
@@ -112,26 +119,34 @@ public class BoardPresenter extends Subscriber<GamEvent> {
         // subscribe to board presenter
         mGameHandler.subscribe(this);
 
+        // Initialize th game
         mGameHandler.initializeGame();
-        // notfy the board with the new state
-        notifyWithstate();
     }
 
     /**
      * Notify the board with the current state
      */
-    private void notifyWithstate() {
+    private void notifyWithState() {
         // if the board view is available then notify about the state change
         mBoardView.updateWithState(mGameHandler.getBoardState());
     }
 
+    /**
+     * Updates the view with the move made.
+     *
+     * @param move
+     */
+    private void updateViewWithMove(Move move) {
+        mBoardView.switchTiles(move.getPosition(), move.getNextPosition());
+    }
 
     /**
      * Handler for a tile is cliked event
      *
      * @param index
+     * @return true if the tile click is a valid click, false otherwise.
      */
-    public void tileClicked(int index) {
+    public boolean tileClicked(int index) {
         // get the position of the tile
         Pair<Integer, Integer> clickedPosition = mGameHandler.getBoardState().getPosition(index);
         Pair<Integer, Integer> emptyTilePosition = mGameHandler.getBoardState().getPosition(BoardState.EMPTY_TILE_INDEX);
@@ -156,10 +171,13 @@ public class BoardPresenter extends Subscriber<GamEvent> {
             List<Move> moves = generateMoves(clickedPosition, emptyTilePosition, direction);
 
             for (Move move : moves) {
-                mGameHandler.getBoardState().makeMove(move);
-                mBoardView.switchTiles(move.getPosition(), move.getNextPosition());
+                mGameHandler.makeMove(move);
             }
+
+            return true;
         }
+
+        return false;
     }
 
 

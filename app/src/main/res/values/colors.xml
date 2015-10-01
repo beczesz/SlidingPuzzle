@@ -2,10 +2,32 @@
 <resources>
 
     <!-- Board colors -->
-    <color name="boardBackground">@android:color/holo_red_light</color>
+    <color name="background">@color/primary_light_2</color>
+    <color name="overlay_color">#9CBA2E</color>
 
     <!-- Loaders -->
-    <color name="loader_view_start">@color/primary</color>
+    <color name="loader_view_start">@color/primary_light_2</color>
     <color name="loader_view_end">@color/primary_dark</color>
+
+    <!-- Tiles -->
+    <color name="tile_default">@color/primary_buttons</color>
+    <color name="tile_highlight">@color/accent</color>
+    <color name="tile_error">@color/error</color>
+    <color name="tile_text">@color/secondary_text</color>
+    <color name="tile_text_accent">@color/primary_text</color>
+
+    <!-- Icons -->
+    <color name="default_icon">@color/primary_text</color>
+    <color name="play_icon">@color/secondary_text</color>
+    <color name="stop_icon">@color/error_accent</color>
+
+    <!-- card colors -->
+    <color name="card_background">#F7FEDB</color>
+    <color name="card_shadow_1">#d4d4d4</color>
+    <color name="card_shadow_2">#dddddd</color>
+    <color name="card_detailing">#eee</color>
+
+
+
 
 </resources>

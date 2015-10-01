@@ -1,7 +1,10 @@
 package com.exarlabs.android.slidingpuzzle.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+
+import com.tsengvn.typekit.TypekitContextWrapper;
 
 import butterknife.ButterKnife;
 
@@ -45,6 +48,11 @@ public class ExarActivity extends Activity {
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
         ButterKnife.bind(this);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
     }
 
     // ------------------------------------------------------------------------

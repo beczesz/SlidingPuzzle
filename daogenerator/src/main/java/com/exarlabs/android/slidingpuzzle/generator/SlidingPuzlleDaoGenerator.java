@@ -42,6 +42,7 @@ public class SlidingPuzlleDaoGenerator {
         Schema schema = new Schema(1000, "com.exarlabs.android.slidingpuzzle.model.dao");
 
         addSolutions(schema);
+        addPlays(schema);
 
         new DaoGenerator().generateAll(schema, "./app/src/main/java");
     }
@@ -50,7 +51,17 @@ public class SlidingPuzlleDaoGenerator {
         Entity note = schema.addEntity("GeneratedSolution");
         note.addIdProperty();
         note.addIntProperty("size").notNull();
-        note.addByteArrayProperty("steps").notNull();
+        note.addByteArrayProperty("moves").notNull();
+    }
+
+    private static void addPlays(Schema schema) {
+        Entity note = schema.addEntity("Play");
+        note.addIdProperty();
+        note.addDateProperty("startDate").notNull();
+        note.addIntProperty("boardSize").notNull();
+        note.addIntProperty("duration").notNull();
+        note.addIntProperty("numberOfMoves").notNull();
+        note.addByteArrayProperty("encodedMoves").notNull();
     }
 
     // ------------------------------------------------------------------------

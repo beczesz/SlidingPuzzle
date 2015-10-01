@@ -13,8 +13,8 @@ import com.exarlabs.android.slidingpuzzle.R;
 import com.exarlabs.android.slidingpuzzle.SlidingPuzzleApplication;
 import com.exarlabs.android.slidingpuzzle.business.AppConstants;
 import com.exarlabs.android.slidingpuzzle.business.solutions.SolutionsHandler;
-import com.exarlabs.android.slidingpuzzle.ui.BoardGameActivity;
 import com.exarlabs.android.slidingpuzzle.ui.ExarActivity;
+import com.exarlabs.android.slidingpuzzle.ui.SlidingPuzzleActivity;
 import com.greenfrvr.rubberloader.RubberLoaderView;
 
 import butterknife.Bind;
@@ -23,6 +23,7 @@ import rx.Observer;
 import rx.functions.Func2;
 
 /**
+ * Displays a SplashScreen loading an dinitializing the necessary component for the app.
  * Created by becze on 9/21/2015.
  */
 public class SplashScreenActivity extends ExarActivity {
@@ -121,7 +122,7 @@ public class SplashScreenActivity extends ExarActivity {
     private Observable<Boolean> getSplashScreenDelayer() {
         //@formatter:off
         return Observable.just(true)
-                        .delay(mPrefs.getBoolean(AppConstants.SP_KEY_DELAYED_SPLASH_SCREEN, true) ? SPLASH_DELAY_SECONDS : 0, TimeUnit.SECONDS);
+                        .delay(mPrefs.getBoolean(AppConstants.SP_KEY_DELAYED_SPLASH_SCREEN, false) ? SPLASH_DELAY_SECONDS : 0, TimeUnit.SECONDS);
         //@formatter:on
     }
 
@@ -130,7 +131,8 @@ public class SplashScreenActivity extends ExarActivity {
      * Shoudl be called when all the nexessary initialization is done.
      */
     public void onInitFinished() {
-        startActivity(new Intent(this, BoardGameActivity.class));
+        startActivity(new Intent(this, SlidingPuzzleActivity.class));
+        finish();
     }
 
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.exarlabs.android.slidingpuzzle.BuildConfig;
+import com.exarlabs.android.slidingpuzzle.business.score.ScoreHandler;
 import com.exarlabs.android.slidingpuzzle.business.solutions.SolutionsHandler;
 import com.exarlabs.android.slidingpuzzle.model.dao.DaoMaster;
 import com.exarlabs.android.slidingpuzzle.model.dao.DaoSession;
@@ -79,6 +80,12 @@ public class PersistenceModule {
     @Singleton
     protected SolutionsHandler provideSolutionHandler() {
         return new SolutionsHandler();
+    }
+
+    @Provides
+    @Singleton
+    protected ScoreHandler provideScoreHandler() {
+        return new ScoreHandler();
     }
 
 }

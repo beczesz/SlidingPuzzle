@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:paddingBottom="@dimen/padding_xxlarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/app_icon"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/main_menu_start_game"
+        style="@style/MainMenuItem"
+        android:text="@string/lbl_start_game"/>
+
+    <TextView
+        android:id="@+id/main_menu_high_scores"
+        style="@style/MainMenuItem"
+        android:text="@string/lbl_hi_scores"/>
+
+    <TextView
+        android:id="@+id/main_menu_settings"
+        style="@style/MainMenuItem"
+        android:text="@string/lbl_settings"/>
+
+    <TextView
+        android:id="@+id/main_menu_exit_game"
+        style="@style/MainMenuItem"
+        android:text="@string/lbl_exit_game"/>
+
+</LinearLayout>

@@ -8,6 +8,8 @@ import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
+import com.exarlabs.android.slidingpuzzle.ui.navigation.NavigationManager;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -32,6 +34,12 @@ public class MainModule {
     @Singleton
     protected Context provideApplicationContext() {
         return app;
+    }
+
+    @Provides
+    @Singleton
+    protected NavigationManager provideNavigationManager() {
+        return new NavigationManager();
     }
 
     @Provides

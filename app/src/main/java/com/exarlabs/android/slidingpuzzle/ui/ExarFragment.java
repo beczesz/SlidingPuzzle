@@ -1,7 +1,7 @@
 package com.exarlabs.android.slidingpuzzle.ui;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.View;
 
 import butterknife.ButterKnife;
@@ -40,7 +40,35 @@ public class ExarFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, getActivity());
+        ButterKnife.bind(this, view);
+    }
+
+    /**
+     * Initializes the ActionBar
+     *
+     * @param showHomeButton
+     * @param title
+     */
+    protected void initActionBar(boolean showHomeButton, String title) {
+        if (getActivity() != null && getActivity().getActionBar() != null) {
+            getActivity().getActionBar().setHomeButtonEnabled(showHomeButton);
+            getActivity().getActionBar().setTitle(title);
+        }
+    }
+
+    /**
+     * Shows and hides the actionbar
+     *
+     * @param isShown
+     */
+    protected void showActionbar(boolean isShown) {
+        if (getActivity() != null && getActivity().getActionBar() != null) {
+            if (isShown) {
+                getActivity().getActionBar().show();
+            } else {
+                getActivity().getActionBar().hide();
+            }
+        }
     }
 
 

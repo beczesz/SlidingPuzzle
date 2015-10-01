@@ -11,6 +11,9 @@ public class GamEvent {
 
     public static final int MOVE_MADE = 1;
     public static final int GAME_RESET = 2;
+    public static final int GAME_SHUFFLED = 3;
+    public static final int GAME_SOLVED = 4;
+    public static final int CLOCK_TICK = 5;
 
     // ------------------------------------------------------------------------
     // STATIC FIELDS

@@ -9,7 +9,7 @@ public class GeneratedSolution {
     private Long id;
     private int size;
     /** Not-null value. */
-    private byte[] steps;
+    private byte[] moves;
 
     public GeneratedSolution() {
     }
@@ -18,10 +18,10 @@ public class GeneratedSolution {
         this.id = id;
     }
 
-    public GeneratedSolution(Long id, int size, byte[] steps) {
+    public GeneratedSolution(Long id, int size, byte[] moves) {
         this.id = id;
         this.size = size;
-        this.steps = steps;
+        this.moves = moves;
     }
 
     public Long getId() {
@@ -41,13 +41,13 @@ public class GeneratedSolution {
     }
 
     /** Not-null value. */
-    public byte[] getSteps() {
-        return steps;
+    public byte[] getMoves() {
+        return moves;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setSteps(byte[] steps) {
-        this.steps = steps;
+    public void setMoves(byte[] moves) {
+        this.moves = moves;
     }
 
 }

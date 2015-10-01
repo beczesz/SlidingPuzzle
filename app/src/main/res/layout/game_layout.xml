@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".BoardGameActivity">
+
+
+    <fragment
+        android:id="@+id/board_container"
+        class="com.exarlabs.android.slidingpuzzle.ui.game.board.BoardFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/board"/>
+
+    <fragment
+        android:id="@+id/stats_container"
+        class="com.exarlabs.android.slidingpuzzle.ui.game.stats.StatsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/game_stats"/>
+
+</LinearLayout>

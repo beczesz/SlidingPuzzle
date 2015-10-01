@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/overlay_color"
+              android:orientation="vertical"
+              android:padding="@dimen/padding_default">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        >
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/padding_default"
+            android:text="{ion-android-time}"
+            android:textColor="@color/default_icon"
+            android:textSize="@dimen/stats_icon_size"/>
+
+        <TextView
+            android:id="@+id/tv_time_elapsed"
+            style="@style/StatsValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="@string/lbl_time"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        >
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/padding_default"
+            android:text="{ion-android-exit}"
+            android:textColor="@color/default_icon"
+            android:textSize="@dimen/stats_icon_size"/>
+
+        <TextView
+            android:id="@+id/tv_steps_taken"
+            style="@style/StatsValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="@string/lbl_steps"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

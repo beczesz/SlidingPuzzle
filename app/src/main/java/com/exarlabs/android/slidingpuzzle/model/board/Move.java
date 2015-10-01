@@ -30,6 +30,7 @@ public class Move {
             }
         }
 
+
         /**
          * Decodes a binary string array and returns the direction
          * Ex: "00" is LEFT

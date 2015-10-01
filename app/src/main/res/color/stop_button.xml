@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- enabled -->
+    <item android:color="@color/error_accent"
+          android:state_enabled="true"/>
+
+    <!-- default -->
+    <item android:color="@color/secondary_text"/>
+</selector>

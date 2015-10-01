@@ -3,7 +3,7 @@ package com.exarlabs.android.slidingpuzzle.business;
 import javax.inject.Singleton;
 
 import com.exarlabs.android.slidingpuzzle.business.board.GameHandler;
-import com.exarlabs.android.slidingpuzzle.ui.board.BoardPresenter;
+import com.exarlabs.android.slidingpuzzle.ui.game.board.BoardPresenter;
 
 import dagger.Module;
 import dagger.Provides;

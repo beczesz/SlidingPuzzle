@@ -2,12 +2,19 @@
 <resources>
 
     <!-- Palette colors -->
-    <color name="primary">#607D8B</color>
+    <color name="primary_light">#D8FF3F</color>
+    <color name="primary_light_2">#ABCD43</color>
+    <color name="primary_buttons">#F7FEDE</color>
+
+    <color name="primary_text">#F7FEDE</color>
+    <color name="secondary_text">#424242</color>
+    <color name="error">#FFC1BF</color>
+    <color name="error_accent">#E16767</color>
+
+
     <color name="primary_dark">#455A64</color>
-    <color name="primary_light">#CFD8DC</color>
-    <color name="accent">#FFC107</color>
-    <color name="primary_text">#212121</color>
-    <color name="secondary_text">#727272</color>
+
+    <color name="accent">#FAFCFC</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
 </resources>

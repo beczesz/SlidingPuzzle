@@ -136,7 +136,7 @@ public class SolutionsHandler {
             while ((inputStream.read(buffer)) != -1) {
                 GeneratedSolution solution = new GeneratedSolution();
                 solution.setSize(4);
-                solution.setSteps(Arrays.copyOf(buffer, buffer.length));
+                solution.setMoves(Arrays.copyOf(buffer, buffer.length));
                 solutions.add(solution);
             }
 
@@ -163,7 +163,7 @@ public class SolutionsHandler {
             while ((inputStream.read(buffer)) != -1) {
                 GeneratedSolution solution = new GeneratedSolution();
                 solution.setSize(3);
-                solution.setSteps(Arrays.copyOf(buffer, buffer.length));
+                solution.setMoves(Arrays.copyOf(buffer, buffer.length));
                 solutions.add(solution);
             }
 
@@ -195,7 +195,7 @@ public class SolutionsHandler {
                         .build()
                         .list();
         //@formatter:on
-        return list.get(0).getSteps();
+        return list.get(0).getMoves();
     }
 
     // ------------------------------------------------------------------------
