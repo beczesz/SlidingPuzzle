@@ -7,9 +7,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.RelativeLayout;
 
 import com.exarlabs.android.slidingpuzzle.R;
@@ -33,6 +31,7 @@ public class BoardView extends RelativeLayout implements BoardPresenter.IBoardVi
     // ------------------------------------------------------------------------
     private static final int DEFAULT_TILE_SIZE = 300;
     private static final int DEFAULT_TILE_PADDING = 10;
+    public static final int MOVE_DURATION = 50;
 
     // ------------------------------------------------------------------------
     // STATIC METHODS
@@ -108,24 +107,41 @@ public class BoardView extends RelativeLayout implements BoardPresenter.IBoardVi
         mTileViews[emptyTilePosition.first][emptyTilePosition.second] = firstView;
 
 
-        //@formatter:off
-        Animation tileToEmpty = new TranslateAnimation(
-                        firstView.getTileX(), // we always start from the current position
-                        firstView.getTileX() + (emptyTilePosition.second - clickedPosition.second) * (mTileSize + mTilePadding),
-                        firstView.getTileY(),// we always start from the current position
-                        firstView.getTileY() + (emptyTilePosition.first - clickedPosition.first) * (mTileSize + mTilePadding)
-        );
-        tileToEmpty.setDuration(50);
-        tileToEmpty.setAnimationListener(this);
-        tileToEmpty.setInterpolator(new AccelerateInterpolator());
-        tileToEmpty.setFillAfter(true);
-        firstView.startAnimation(tileToEmpty);
-        //@formatter:on
+        // TODO resolve an animation
 
+////        //@formatter:off
+////        Animation tileToEmpty = new TranslateAnimation(
+////                        firstView.getTileX(), // we always start from the current position
+////                        firstView.getTileX() + (emptyTilePosition.second - clickedPosition.second) * (mTileSize + mTilePadding),
+////                        firstView.getTileY(),// we always start from the current position
+////                        firstView.getTileY() + (emptyTilePosition.first - clickedPosition.first) * (mTileSize + mTilePadding)
+////        );
+////        tileToEmpty.setDuration(50);
+////        tileToEmpty.setAnimationListener(this);
+////        tileToEmpty.setInterpolator(new AccelerateInterpolator());
+////        tileToEmpty.setFillAfter(true);
+////        firstView.startAnimation(tileToEmpty);
+////        //@formatter:on
+////
+////
+//
+//
+//        //@formatter:off
+//        firstView.animate().translationXBy( (emptyTilePosition.second - clickedPosition.second) * (mTileSize + mTilePadding))
+//                        .setDuration(MOVE_DURATION)
+//                        .setInterpolator(new AccelerateInterpolator())
+//                        .start();
+//        firstView.animate().translationYBy((emptyTilePosition.first - clickedPosition.first) * (mTileSize + mTilePadding))
+//                        .setDuration(MOVE_DURATION)
+//                        .setInterpolator(new AccelerateInterpolator())
+//                        .start();
+//        //@formatter:on
+//
+//        // Update the position of the tiles
+//        firstView.setTileX(firstView.getTileX() + (emptyTilePosition.second - clickedPosition.second) * (mTileSize + mTilePadding));
+//        firstView.setTileY(firstView.getTileY() + (emptyTilePosition.first - clickedPosition.first) * (mTileSize + mTilePadding));
 
-        // Update the position of the tiles
-        firstView.setTileX(firstView.getTileX() + (emptyTilePosition.second - clickedPosition.second) * (mTileSize + mTilePadding));
-        firstView.setTileY(firstView.getTileY() + (emptyTilePosition.first - clickedPosition.first) * (mTileSize + mTilePadding));
+        refreshTiles();
 
         // notify the tile that it has been tapped
         firstView.onTileTapped(true);
@@ -237,7 +253,7 @@ public class BoardView extends RelativeLayout implements BoardPresenter.IBoardVi
 
 
     private void handleTileClicked(TileView tile) {
-        int index = mapTileView(tile);
+        int index = tile.getIndex();
         if (index != BoardState.EMPTY_TILE_INDEX) {
             boolean isValid = mBoardPresenter.tileClicked(index);
             if (!isValid) {
