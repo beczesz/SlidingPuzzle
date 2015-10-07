@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_default"
         android:text="{ion-arrow-graph-up-right}"
-        android:textColor="@color/secondary_text"
+        android:textColor="@color/text_secondary"
         android:textSize="50dip"
         tools:text="/"
         android:id="@+id/view"

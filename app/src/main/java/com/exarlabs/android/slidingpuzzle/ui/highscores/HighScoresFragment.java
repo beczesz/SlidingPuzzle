@@ -21,6 +21,7 @@ import com.exarlabs.android.slidingpuzzle.business.score.ScoreHandler;
 import com.exarlabs.android.slidingpuzzle.model.dao.Play;
 import com.exarlabs.android.slidingpuzzle.ui.ExarFragment;
 import com.exarlabs.android.slidingpuzzle.utils.Pair;
+import com.exarlabs.android.slidingpuzzle.utils.TimeFormatter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -84,8 +85,8 @@ public class HighScoresFragment extends ExarFragment {
             // Initialize with the row.
             Pair<Play, Play> item = getItem(position);
             holder.mHighScoreItemNumber.setText("#" + (position + 1));
-            holder.mHighScore3x3Value.setText(item.first != null ? String.format("%.1f s", item.first.getDuration() / 1000f) : "");
-            holder.mHighScore4x4Value.setText(item.second != null ? String.format("%.1f s", item.second.getDuration() / 1000f) : "");
+            holder.mHighScore3x3Value.setText(item.first != null ? TimeFormatter.formatShort(item.first.getDuration()) : "");
+            holder.mHighScore4x4Value.setText(item.second != null ? TimeFormatter.formatShort(item.second.getDuration()) : "");
             return convertView;
         }
 

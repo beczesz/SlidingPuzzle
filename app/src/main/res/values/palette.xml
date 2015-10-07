@@ -6,8 +6,8 @@
     <color name="primary_light_2">#ABCD43</color>
     <color name="primary_buttons">#F7FEDE</color>
 
-    <color name="primary_text">#F7FEDE</color>
-    <color name="secondary_text">#424242</color>
+    <color name="text_primary">#F7FEDE</color>
+    <color name="text_secondary">#424242</color>
     <color name="error">#FFC1BF</color>
     <color name="error_accent">#E16767</color>
 

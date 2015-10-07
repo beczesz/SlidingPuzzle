@@ -17,6 +17,7 @@ import com.exarlabs.android.slidingpuzzle.SlidingPuzzleApplication;
 import com.exarlabs.android.slidingpuzzle.business.board.GamEvent;
 import com.exarlabs.android.slidingpuzzle.business.board.GameHandler;
 import com.exarlabs.android.slidingpuzzle.ui.ExarFragment;
+import com.exarlabs.android.slidingpuzzle.utils.TimeFormatter;
 
 import butterknife.Bind;
 import rx.Observable;
@@ -154,13 +155,11 @@ public class StatsFragment extends ExarFragment {
      */
     private void refreshTime(int duration) {
         if (mTimeElapsedTextView != null && duration < MAX_DURATION) {
-            mTimeElapsedTextView.setText(format(duration));
+            mTimeElapsedTextView.setText(TimeFormatter.format(duration));
         }
     }
 
-    private String format(int duration) {
-        return String.format("%02d:%02d:%02d", duration / (1000 * 60), (duration / 1000) % 60, (duration % 1000) / 10);
-    }
+
 
     private void startTimer() {
         stopTimer();

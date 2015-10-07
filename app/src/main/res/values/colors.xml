@@ -3,7 +3,8 @@
 
     <!-- Board colors -->
     <color name="background">@color/primary_light_2</color>
-    <color name="overlay_color">#9CBA2E</color>
+    <color name="background_overlay">#9CBA2E</color>
+    <color name="background_overlay_to_be_continued">#AAFFFFFF</color>
 
     <!-- Loaders -->
     <color name="loader_view_start">@color/primary_light_2</color>
@@ -13,12 +14,12 @@
     <color name="tile_default">@color/primary_buttons</color>
     <color name="tile_highlight">@color/accent</color>
     <color name="tile_error">@color/error</color>
-    <color name="tile_text">@color/secondary_text</color>
-    <color name="tile_text_accent">@color/primary_text</color>
+    <color name="tile_text">@color/text_secondary</color>
+    <color name="tile_text_accent">@color/text_primary</color>
 
     <!-- Icons -->
-    <color name="default_icon">@color/primary_text</color>
-    <color name="play_icon">@color/secondary_text</color>
+    <color name="default_icon">@color/text_primary</color>
+    <color name="play_icon">@color/text_secondary</color>
     <color name="stop_icon">@color/error_accent</color>
 
     <!-- card colors -->

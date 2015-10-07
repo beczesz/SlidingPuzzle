@@ -6,6 +6,7 @@
     <dimen name="text_size_medium">18sp</dimen>
     <dimen name="text_size_large">22sp</dimen>
     <dimen name="text_size_xlarge">26sp</dimen>
+    <dimen name="text_size_xxxlarge">40sp</dimen>
 
 
     <!-- Default spacing -->
@@ -14,7 +15,6 @@
     <dimen name="padding_xlarge">20dip</dimen>
     <dimen name="padding_xxlarge">30dip</dimen>
     <dimen name="padding_xxxlarge">50dip</dimen>
-
 
 
     <!-- Default board height -->
@@ -29,5 +29,11 @@
     <!-- Main Menu -->
     <dimen name="main_menu_font_size">@dimen/text_size_large</dimen>
     <dimen name="main_menu_item_height">65dip</dimen>
+
+    <!-- High Scores -->
+    <dimen name="high_score_label1_margin">50dip</dimen>
+    <dimen name="high_score_label2_margin">150dip</dimen>
+    <dimen name="high_score_label3_margin">250dip</dimen>
+
 
 </resources>

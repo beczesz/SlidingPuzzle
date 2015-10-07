@@ -177,7 +177,8 @@ public class BoardFragment extends ExarFragment {
 
     @OnClick(R.id.settings)
     public void settings() {
-       mNavigationManager.startSettings();
+        resetBoard();
+        mNavigationManager.startSettings();
     }
 
     /**

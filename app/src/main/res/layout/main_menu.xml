@@ -18,7 +18,8 @@
     <TextView
         android:id="@+id/main_menu_start_game"
         style="@style/MainMenuItem"
-        android:text="@string/lbl_start_game"/>
+        android:text="@string/lbl_start_game"
+        />
 
     <TextView
         android:id="@+id/main_menu_high_scores"

@@ -7,14 +7,29 @@
                 android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/padding_xxxlarge"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:gravity="center"
+        android:background="@color/background_overlay"
+        android:gravity="center_vertical|right"
         android:orientation="horizontal">
 
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/reset_board"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/padding_large"
+            android:text="{ion-stop}"
+            android:textColor="@color/stop_button"
+            android:textSize="45dip"
+            tools:text="."
+            />
 
         <com.joanzapata.iconify.widget.IconTextView
             android:id="@+id/settings"
@@ -22,25 +37,11 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:paddingRight="@dimen/padding_default"
+            android:paddingRight="@dimen/padding_large"
             android:text="{ion-gear-a}"
             android:textColor="@color/play_icon"
             android:textSize="45dip"
             tools:text="."/>
-
-        <com.joanzapata.iconify.widget.IconTextView
-            android:id="@+id/reset_board"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:paddingRight="@dimen/padding_default"
-            android:text="{ion-stop}"
-            android:textColor="@color/stop_button"
-            android:textSize="45dip"
-            tools:text="."
-            />
-
 
     </LinearLayout>
 

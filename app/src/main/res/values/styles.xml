@@ -2,17 +2,17 @@
 <resources>
 
     <style name="TextView">
-        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textColor">@color/text_primary</item>
 
     </style>
 
 
     <style name="MainMenuItem">
-        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">@dimen/main_menu_font_size</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/overlay_color</item>
+        <item name="android:background">@color/background_overlay</item>
         <item name="android:gravity">center</item>
         <item name="android:padding">@dimen/padding_xlarge</item>
         <item name="android:layout_marginTop">@dimen/padding_xlarge</item>
@@ -24,19 +24,50 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="HiScoreRowIndex" parent="TextView">
-        <item name="android:padding">@dimen/padding_xlarge</item>
+    <style name="HiScoreHeader" parent="TextView">
+        <item name="android:padding">@dimen/padding_default</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/main_menu_font_size</item>
+    </style>
+
+    <style name="HiScoreRowIndex" parent="TextView">
+        <item name="android:padding">@dimen/padding_default</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/main_menu_font_size</item>
     </style>
 
     <style name="HiScoreRowValue" parent="TextView">
-        <item name="android:padding">@dimen/padding_xlarge</item>
+        <item name="android:padding">@dimen/padding_default</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
     </style>
 
     <style name="StatsValue">
-        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textColor">@color/text_primary</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/text_size_large</item>
+    </style>
+
+    <style name="SectionHeader" parent="TextView">
+        <item name="android:padding">@dimen/padding_default</item>
+        <item name="android:background">@color/background_overlay</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/padding_large</item>
+    </style>
+
+    <style name="ToBeContinued" parent="TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/error_accent</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">60sp</item>
+        <item name="android:angle">45</item>
+
+
+
     </style>
 
 

@@ -2,7 +2,9 @@ package com.exarlabs.android.slidingpuzzle.ui.game;
 
 import javax.inject.Inject;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -56,6 +58,7 @@ public class BoardGameFragment extends ExarFragment {
     @Inject
     public GameHandler mGameHandler;
 
+    private View rootView;
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -68,9 +71,12 @@ public class BoardGameFragment extends ExarFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.game_layout, null);
-        mStatsFragment = getFragmentManager().findFragmentById(R.id.stats_container);
-        mBoardFragment = getFragmentManager().findFragmentById(R.id.board_container);
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.game_layout, null);
+            mStatsFragment = getFragmentManager().findFragmentById(R.id.stats_container);
+            mBoardFragment = getFragmentManager().findFragmentById(R.id.board_container);
+        }
+
         return rootView;
     }
 
@@ -115,8 +121,27 @@ public class BoardGameFragment extends ExarFragment {
         super.onDestroy();
     }
 
+    /**
+     * We display a popup that the board is solved now.
+     */
     private void handleSolved() {
+        // 1. Instantiate an AlertDialog.Builder with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
+        // 2. Chain together various setter methods to set the dialog characteristics
+        String message = String.format(getString(R.string.board_solved), (mGameHandler.getGameDuration() / 1000));
+        builder.setMessage(message).setTitle(R.string.done);
+
+        builder.setPositiveButton(R.string.play_again, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mGameHandler.initializeGame();
+            }
+        });
+
+        // 3. Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override
